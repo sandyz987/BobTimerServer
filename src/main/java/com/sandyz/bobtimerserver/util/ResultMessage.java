@@ -1,5 +1,4 @@
 package com.sandyz.bobtimerserver.util;
-
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -7,32 +6,48 @@ import org.springframework.stereotype.Component;
 @Data
 public class ResultMessage {
 
-    private String code;
+    private int code;
     private String msg;
     private Object data;
 
-    public void success(String code, String msg, Object data) {
+    private ResultMessage() {}
+
+    public static ResultMessage success() {
+        return new ResultMessage();
+    }
+
+    public static ResultMessage success(int code, String msg, Object data) {
+        return new ResultMessage().setCode(code).setMsg(msg).setData(data);
+    }
+
+    public static ResultMessage success(int code, String msg) {
+        return new ResultMessage().setCode(code).setMsg(msg);
+    }
+
+    public static ResultMessage success(int code, Object data) {
+        return new ResultMessage().setCode(code).setData(data);
+    }
+
+    public static ResultMessage fail() {
+        return new ResultMessage();
+    }
+
+    public static ResultMessage fail(int code, String msg) {
+        return new ResultMessage().setCode(code).setMsg(msg);
+    }
+
+    public ResultMessage setCode(int code) {
         this.code = code;
+        return this;
+    }
+
+    public ResultMessage setMsg(String msg) {
         this.msg = msg;
+        return this;
+    }
+
+    public ResultMessage setData(Object data) {
         this.data = data;
+        return this;
     }
-
-    public void success(String code, String msg) {
-        this.code = code;
-        this.msg = msg;
-        this.data = null;
-    }
-
-    public void success(String code, Object data) {
-        this.code = code;
-        this.msg = null;
-        this.data = data;
-    }
-
-    public void fail(String code, String msg) {
-        this.code = code;
-        this.msg = msg;
-        this.data = null;
-    }
-
 }
