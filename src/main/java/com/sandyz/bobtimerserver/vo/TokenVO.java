@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class TokenVo {
+public class TokenVO {
     private String token;
     private Long expireTime;
 }

@@ -6,11 +6,11 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
-@Table(name = "dynamic_list")
-public class Dynamic {
+@Table(name = "article")
+public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer dynamicId;
+    private Integer articleId;
 
     @Column(nullable = false)
     private Integer userId;

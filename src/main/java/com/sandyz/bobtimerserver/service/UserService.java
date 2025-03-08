@@ -2,11 +2,11 @@ package com.sandyz.bobtimerserver.service;
 
 
 import com.sandyz.bobtimerserver.pojo.User;
-import com.sandyz.bobtimerserver.pojo.UserDTO;
+import com.sandyz.bobtimerserver.vo.UserVO;
 
 public interface UserService {
 
-        User userLogin(UserDTO userDTO);
+        User userLogin(UserVO userVo);
 
-        void userRegister(UserDTO userDTO);
+        void userRegister(UserVO userVo);
 }

@@ -4,7 +4,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.sandyz.bobtimerserver.exception.BobException;
 import com.sandyz.bobtimerserver.exception.BobExceptionEnum;
 import com.sandyz.bobtimerserver.pojo.User;
-import com.sandyz.bobtimerserver.pojo.UserDTO;
+import com.sandyz.bobtimerserver.vo.UserVO;
 import com.sandyz.bobtimerserver.repo.UserRepository;
 import com.sandyz.bobtimerserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,8 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User userLogin(UserDTO userDTO) {
-        User user = userRepository.findByUserId(userDTO.getUserId());
+    public User userLogin(UserVO userVo) {
+        User user = userRepository.findByUserId(userVo.getUserId());
         if (user == null) {
             throw new BobException(BobExceptionEnum.USER_NOT_EXISTED_ERROR);
         }
@@ -29,10 +29,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void userRegister(UserDTO userDTO) {
+    public void userRegister(UserVO userVo) {
         User user = new User();
-        user.setUserId(userDTO.getUserId());
-        user.setPassword(userDTO.getPassword());
+        user.setUserId(userVo.getUserId());
+        user.setPassword(userVo.getPassword());
         user.setNickname("User_" + RandomUtil.randomString(6));
         user.setAvatarUrl("https://picsum.photos/200/300");
         user.setSex("保密");

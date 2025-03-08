@@ -17,8 +17,17 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new RefreshTokenInterceptor(redisTemplate))
                 .addPathPatterns("/**");
+        /**
+         * 不需要使用用户信息UserHolder的路由都放在这里：
+         */
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/login", "/user/register", "/user/logout", "/error", "/static/**");
+                .excludePathPatterns(
+                        "/static/**",
+                        "/error",
+                        "/user/login",
+                        "/user/register",
+                        "/user/logout"
+                );
     }
 }

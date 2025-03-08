@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
-@Table(name = "seckill_list")
+@Table(name = "seckill")
 public class SecKill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

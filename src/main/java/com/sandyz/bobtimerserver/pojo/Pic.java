@@ -5,14 +5,14 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "pic_list")
+@Table(name = "pic")
 public class Pic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
-    private Integer dynamicId;
+    private Integer articleId;
 
     @Column(nullable = false, length = 3000)
     private String picUrl;

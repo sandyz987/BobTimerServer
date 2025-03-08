@@ -1,5 +1,5 @@
 -- 用户表
-CREATE TABLE IF NOT EXISTS `user_list`
+CREATE TABLE IF NOT EXISTS `user`
 (
     `id`            INT UNSIGNED AUTO_INCREMENT,         -- 自增主键 ID
     `user_id`       VARCHAR(20)               NOT NULL,  -- 手机号（可作为查询用）
@@ -20,11 +20,11 @@ CREATE TABLE IF NOT EXISTS `user_list`
   DEFAULT CHARSET = utf8;
 
 -- 设置自增 ID 从 100002 开始
-ALTER TABLE `user_list`
+ALTER TABLE `user`
     AUTO_INCREMENT = 100002;
 
 -- 学校表
-CREATE TABLE IF NOT EXISTS `school_list`
+CREATE TABLE IF NOT EXISTS `school`
 (
     `school_id`         INT UNSIGNED AUTO_INCREMENT, -- 学校编号
     `school_name`       VARCHAR(30)     NOT NULL,    -- 学校名
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `school_list`
   DEFAULT CHARSET = utf8;
 
 -- 商品表
-CREATE TABLE IF NOT EXISTS `good_list`
+CREATE TABLE IF NOT EXISTS `good`
 (
     `good_id`        INT UNSIGNED AUTO_INCREMENT,         -- 商品编号
     `good_name`      VARCHAR(100)   NOT NULL,             -- 商品名称
@@ -74,21 +74,21 @@ CREATE TABLE IF NOT EXISTS `private_message`
   DEFAULT CHARSET = utf8;
 
 -- 帖子表
-CREATE TABLE IF NOT EXISTS `dynamic_list`
+CREATE TABLE IF NOT EXISTS `article`
 (
-    `dynamic_id`  INT UNSIGNED AUTO_INCREMENT,         -- 动态 ID
+    `article_id`  INT UNSIGNED AUTO_INCREMENT,         -- 动态 ID
     `user_id`     INT UNSIGNED   NOT NULL,              -- 发布人 ID
     `submit_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 发布时间
     `text`        VARCHAR(3000) NOT NULL,              -- 内容
     `topic`       VARCHAR(100)  NOT NULL,              -- 话题或标签
-    PRIMARY KEY (`dynamic_id`),
+    PRIMARY KEY (`article_id`),
     INDEX (`user_id`),
     INDEX (`submit_time`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 -- 评论表（包括一级二级评论）
-CREATE TABLE IF NOT EXISTS `comment_list`
+CREATE TABLE IF NOT EXISTS `comment`
 (
     `reply_id`      INT UNSIGNED,                        -- 回复的动态 ID（一级评论 ID）
     `id`            INT UNSIGNED AUTO_INCREMENT,         -- 评论 ID（唯一标识）
@@ -103,18 +103,18 @@ CREATE TABLE IF NOT EXISTS `comment_list`
   DEFAULT CHARSET = utf8;
 
 -- 图片表（多图关联到动态）
-CREATE TABLE IF NOT EXISTS `pic_list`
+CREATE TABLE IF NOT EXISTS `pic`
 (
-    `dynamic_id` INT UNSIGNED,            -- 所属动态 ID
+    `article_id` INT UNSIGNED,            -- 所属动态 ID
     `id`     INT UNSIGNED AUTO_INCREMENT, -- 图片 ID
     `pic_url`    VARCHAR(3000) NOT NULL,  -- 图片 URL
     PRIMARY KEY (`id`), -- 每个动态下每个图片唯一
-    INDEX (`dynamic_id`) -- 动态 ID 索引
+    INDEX (`article_id`) -- 动态 ID 索引
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 -- 关注表（记录用户的关注关系）
-CREATE TABLE IF NOT EXISTS `follow_list`
+CREATE TABLE IF NOT EXISTS `follow`
 (
     `user_id`          INT UNSIGNED NOT NULL,    -- 用户 ID
     `followed_user_id` INT UNSIGNED NOT NULL,    -- 被关注的用户 ID
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `follow_list`
   DEFAULT CHARSET = utf8;
 
 -- 点赞表（记录用户点赞行为）
-CREATE TABLE IF NOT EXISTS `praise_list`
+CREATE TABLE IF NOT EXISTS `praise`
 (
     `id`      INT UNSIGNED NOT NULL,       -- 被点赞的对象 ID（动态、评论）
     `user_id` INT UNSIGNED NOT NULL,       -- 用户 ID
@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `praise_list`
   DEFAULT CHARSET = utf8;
 
  -- 订单表
-CREATE TABLE IF NOT EXISTS `order_list`
+CREATE TABLE IF NOT EXISTS `order`
 (
     `order_id`      INT UNSIGNED AUTO_INCREMENT,       -- 订单编号
     `user_id`       INT UNSIGNED NOT NULL,             -- 用户 ID
@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `order_list`
   DEFAULT CHARSET = utf8;
 
 -- 收货地址表
-CREATE TABLE IF NOT EXISTS `shipping_address_list`
+CREATE TABLE IF NOT EXISTS `shipping_address`
 (
     `address_id`    INT UNSIGNED AUTO_INCREMENT,      -- 收货地址 ID
     `user_id`       INT UNSIGNED NOT NULL,            -- 用户 ID
@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `product_review`
   DEFAULT CHARSET = utf8;
 
 -- 购物车
-CREATE TABLE IF NOT EXISTS `cart_list`
+CREATE TABLE IF NOT EXISTS `cart`
 (
     `cart_id`     INT UNSIGNED AUTO_INCREMENT,        -- 购物车项编号
     `user_id`     INT UNSIGNED NOT NULL,              -- 用户 ID
@@ -261,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `cart_list`
   DEFAULT CHARSET = utf8;
 
 -- 秒杀表
-CREATE TABLE IF NOT EXISTS `seckill_list`
+CREATE TABLE IF NOT EXISTS `seckill`
 (
     `seckill_id`    INT UNSIGNED AUTO_INCREMENT,       -- 秒杀活动编号
     `good_id`       INT UNSIGNED NOT NULL,             -- 商品 ID
@@ -278,7 +278,7 @@ CREATE TABLE IF NOT EXISTS `seckill_list`
   DEFAULT CHARSET = utf8;
 
 # ============================示例数据=============================
-INSERT INTO `user_list` (`user_id`, `stu_id`, `school_id`, `nickname`, `password`, `register_date`, `sex`, `text`, `avatar_url`, `is_admin`)
+INSERT INTO `user` (`user_id`, `stu_id`, `school_id`, `nickname`, `password`, `register_date`, `sex`, `text`, `avatar_url`, `is_admin`)
 VALUES
     ('admin', '00000000000', 1, 'Administrator', '$2a$10$tMcsrD0JKYiW.qjtUX0/RO5SDqww2MWmXqvHGxwujByLtCwvKC2Am', NOW(), '保密', '系统管理员账号', 'https://example.com/avatar/admin.jpg', 1),
     ('13812345678', '20250301', 1, 'Alice', '$2a$10$H9KpqzAp9DnMBs/IjreLLuUuQ9A/F/mkmnXTRXM0A.zvitG1HIz/a', NOW(), '女', '喜欢编程和旅游', 'https://example.com/avatar/alice.jpg', 0),
@@ -286,14 +286,14 @@ VALUES
     ('13656781234', '20250303', 2, 'Charlie', '$2a$10$H9KpqzAp9DnMBs/IjreLLuUuQ9A/F/mkmnXTRXM0A.zvitG1HIz/a', NOW(), '男', '音乐发烧友', 'https://example.com/avatar/charlie.jpg', 0);
 
 
-INSERT INTO `school_list` (`school_name`, `statement`, `school_avatar_url`, `school_member`)
+INSERT INTO `school` (`school_name`, `statement`, `school_avatar_url`, `school_member`)
 VALUES
     ('重庆邮电大学', '重邮（重庆邮电大学）是一所以信息技术为特色的高校，致力于培养通信、计算机等领域的人才。学校在科研和技术创新方面具有较强实力。', 'https://example.com/school/pku.jpg', 43245),
     ('清华大学', '中国顶尖高校，理工科优势明显', 'https://example.com/school/tsinghua.jpg', 46343),
     ('北京大学', '综合性研究型大学，历史悠久', 'https://example.com/school/pku.jpg', 32524);
 
 
-INSERT INTO `good_list` (`good_name`, `statement`, `price`, `pic_url`, `submit_time`, `from_school_id`, `from_user_id`, `status`, `get_user_id`, `stock`, `sold_count`)
+INSERT INTO `good` (`good_name`, `statement`, `price`, `pic_url`, `submit_time`, `from_school_id`, `from_user_id`, `status`, `get_user_id`, `stock`, `sold_count`)
 VALUES
     ('二手笔记本电脑', '9成新 MacBook Pro，512GB SSD，16GB 内存', 6500.00, 'https://example.com/goods/macbook.jpg', NOW(), 1, 100002, 0, NULL, 2, 1),
     ('PS5 游戏机', '几乎全新，送两款游戏', 3500.00, 'https://example.com/goods/ps5.jpg', NOW(), 2, 100001, 1, 100002, 1, 0);
@@ -303,27 +303,27 @@ VALUES
     (100002, 100001, 0, '你好，最近在忙什么？', NOW(), 0),
     (100001, 100002, 0, '没什么，刚买了个新游戏机！', NOW(), 1);
 
-INSERT INTO `dynamic_list` (`user_id`, `submit_time`, `text`, `topic`)
+INSERT INTO `article` (`user_id`, `submit_time`, `text`, `topic`)
 VALUES
     (100002, NOW(), '今天在学校的实验室做了一个有趣的实验！', '科技'),
     (100001, NOW(), '刚买了PS5，想找人一起玩游戏！', '游戏');
 
-INSERT INTO `comment_list` (`reply_id`, `user_id`, `submit_time`, `text`, `which`, `reply_user_id`)
+INSERT INTO `comment` (`reply_id`, `user_id`, `submit_time`, `text`, `which`, `reply_user_id`)
 VALUES
     (1, 100001, NOW(), '听起来很有趣，什么实验？', 1, NULL),
     (2, 100002, NOW(), '加我好友，一起玩！', 1, NULL);
 
-INSERT INTO `pic_list` (`dynamic_id`, `pic_url`)
+INSERT INTO `pic` (`article_id`, `pic_url`)
 VALUES
-    (1, 'https://example.com/dynamic/experiment.jpg'),
-    (2, 'https://example.com/dynamic/ps5.jpg');
+    (1, 'https://example.com/article/experiment.jpg'),
+    (2, 'https://example.com/article/ps5.jpg');
 
-INSERT INTO `follow_list` (`user_id`, `followed_user_id`)
+INSERT INTO `follow` (`user_id`, `followed_user_id`)
 VALUES
     (100002, 100001),
     (100001, 100002);
 
-INSERT INTO `praise_list` (`id`, `user_id`, `which`)
+INSERT INTO `praise` (`id`, `user_id`, `which`)
 VALUES
     (1, 100001, 0),  -- Bob 给 Alice 的帖子点赞
     (2, 100002, 0);  -- Alice 给 Bob 的帖子点赞

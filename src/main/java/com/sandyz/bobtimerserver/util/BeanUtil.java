@@ -1,8 +1,5 @@
 package com.sandyz.bobtimerserver.util;
 
-import com.sandyz.bobtimerserver.pojo.User;
-import com.sandyz.bobtimerserver.vo.UserVo;
-
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;

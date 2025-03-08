@@ -1,10 +1,10 @@
-package com.sandyz.bobtimerserver.pojo;
+package com.sandyz.bobtimerserver.vo;
 
 import lombok.Data;
 
 
 @Data
-public class UserDTO {
+public class UserVO {
 
     private String userId;
 
