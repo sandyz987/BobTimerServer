@@ -6,7 +6,7 @@ import com.sandyz.bobtimerserver.vo.UserVO;
 
 public interface UserService {
 
-        User userLogin(UserVO userVo);
+    User userLogin(UserVO userVo);
 
-        void userRegister(UserVO userVo);
+    void userRegister(UserVO userVo);
 }

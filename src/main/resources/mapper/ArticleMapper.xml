@@ -1,132 +1,206 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sandyz.bobtimerserver.mapper.ArticleMapper">
-  <resultMap id="BaseResultMap" type="com.sandyz.bobtimerserver.pojo.Article">
-    <!--@mbg.generated-->
-    <!--@Table article-->
-    <id column="article_id" jdbcType="INTEGER" property="articleId" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="submit_time" jdbcType="TIMESTAMP" property="submitTime" />
-    <result column="text" jdbcType="VARCHAR" property="text" />
-    <result column="topic" jdbcType="VARCHAR" property="topic" />
-
-  </resultMap>
-  <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    article_id, user_id, submit_time, `text`, topic
-  </sql>
-
-
-<!--  <sql id="ArticleVOList">-->
-<!--    &lt;!&ndash;@mbg.generated&ndash;&gt;-->
-<!--    a.article_id as article_id, a.user_id as user, a.submit_time, a.`text`, a.topic,-->
-<!--    u.id, u.stu_id, u.school_id, u.nickname, u.register_date, u.sex, u.`text`, u.avatar_url, u.is_admin-->
-<!--  </sql>-->
+    <resultMap id="BaseResultMap" type="com.sandyz.bobtimerserver.pojo.Article">
+        <!--@mbg.generated-->
+        <!--@Table article-->
+        <id column="article_id" jdbcType="INTEGER" property="articleId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="submit_time" jdbcType="TIMESTAMP" property="submitTime"/>
+        <result column="text" jdbcType="VARCHAR" property="text"/>
+        <result column="topic" jdbcType="VARCHAR" property="topic"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        article_id, user_id, submit_time, `text`, topic
+    </sql>
 
 
-  <resultMap id="ArticleVOResultMap" type="com.sandyz.bobtimerserver.vo.ArticleVO" extends="BaseResultMap">
-    <association property="userInfoVO" javaType="com.sandyz.bobtimerserver.vo.UserInfoVO">
-      <result property="userId" column="id" />
-      <result property="stuId" column="stu_id" />
-      <result property="schoolId" column="school_id" />
-      <result property="nickname" column="nickname" />
-      <result property="registerDate" column="register_date" />
-      <result property="sex" column="sex" />
-      <result property="text" column="u_text" />
-      <result property="avatarUrl" column="avatar_url" />
-      <result property="isAdmin" column="is_admin" />
-    </association>
-  </resultMap>
+    <!--  <sql id="ArticleVOList">-->
+    <!--    &lt;!&ndash;@mbg.generated&ndash;&gt;-->
+    <!--    a.article_id as article_id, a.user_id as user, a.submit_time, a.`text`, a.topic,-->
+    <!--    u.id, u.stu_id, u.school_id, u.nickname, u.register_date, u.sex, u.`text`, u.avatar_url, u.is_admin-->
+    <!--  </sql>-->
 
 
+    <sql id="ArticleVOList_Common_List">
+        a.article_id    as article_id,
+        a.user_id       as user_id,
+        a.submit_time   as submit_time,
+        a.`text`        as `text`,
+        a.topic         as topic,
+        u.id            as id,
+        u.stu_id        as stu_id,
+        u.school_id     as school_id,
+        u.nickname      as nickname,
+        u.register_date as register_date,
+        u.sex           as sex,
+        u.`text`        as `u_text`,
+        u.avatar_url    as avatar_url,
+        u.is_admin      as is_admin,
+        i.pic_url       as pic_url
+    </sql>
 
-  <select id="getArticles" resultMap="ArticleVOResultMap">
-    select
-        a.article_id as article_id, a.user_id as user_id, a.submit_time as submit_time, a.`text` as `text`, a.topic as topic,
-        u.id as id, u.stu_id as stu_id, u.school_id as school_id, u.nickname as nickname, u.register_date as register_date,
-        u.sex as sex, u.`text` as `u_text`, u.avatar_url as avatar_url, u.is_admin as is_admin
-    from article a join user u
-    ON a.user_id = u.id where topic = #{topic,jdbcType=VARCHAR}
-    limit #{limit,jdbcType=INTEGER} offset #{offset,jdbcType=INTEGER}
-  </select>
 
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    <!--@mbg.generated-->
-    select 
-    <include refid="Base_Column_List" />
-    from article
-    where article_id = #{articleId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    <!--@mbg.generated-->
-    delete from article
-    where article_id = #{articleId,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" keyColumn="article_id" keyProperty="articleId" parameterType="com.sandyz.bobtimerserver.pojo.Article" useGeneratedKeys="true">
-    <!--@mbg.generated-->
-    insert into article (user_id, submit_time, `text`, 
-      topic)
-    values (#{userId,jdbcType=INTEGER}, #{submitTime,jdbcType=TIMESTAMP}, #{text,jdbcType=VARCHAR}, 
-      #{topic,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" keyColumn="article_id" keyProperty="articleId" parameterType="com.sandyz.bobtimerserver.pojo.Article" useGeneratedKeys="true">
-    <!--@mbg.generated-->
-    insert into article
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
-        user_id,
-      </if>
-      <if test="submitTime != null">
-        submit_time,
-      </if>
-      <if test="text != null">
-        `text`,
-      </if>
-      <if test="topic != null">
-        topic,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="submitTime != null">
-        #{submitTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="text != null">
-        #{text,jdbcType=VARCHAR},
-      </if>
-      <if test="topic != null">
-        #{topic,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sandyz.bobtimerserver.pojo.Article">
-    <!--@mbg.generated-->
-    update article
-    <set>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="submitTime != null">
-        submit_time = #{submitTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="text != null">
-        `text` = #{text,jdbcType=VARCHAR},
-      </if>
-      <if test="topic != null">
-        topic = #{topic,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where article_id = #{articleId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sandyz.bobtimerserver.pojo.Article">
-    <!--@mbg.generated-->
-    update article
-    set user_id = #{userId,jdbcType=INTEGER},
-      submit_time = #{submitTime,jdbcType=TIMESTAMP},
-      `text` = #{text,jdbcType=VARCHAR},
-      topic = #{topic,jdbcType=VARCHAR}
-    where article_id = #{articleId,jdbcType=INTEGER}
-  </update>
+    <resultMap id="ArticleVOResultMap" type="com.sandyz.bobtimerserver.vo.ArticleVO" extends="BaseResultMap">
+        <association property="userInfoVO" javaType="com.sandyz.bobtimerserver.vo.UserInfoVO">
+            <result property="userId" column="id"/>
+            <result property="stuId" column="stu_id"/>
+            <result property="schoolId" column="school_id"/>
+            <result property="nickname" column="nickname"/>
+            <result property="registerDate" column="register_date"/>
+            <result property="sex" column="sex"/>
+            <result property="text" column="u_text"/>
+            <result property="avatarUrl" column="avatar_url"/>
+            <result property="isAdmin" column="is_admin"/>
+        </association>
+
+        <collection property="images" ofType="String">
+            <result column="pic_url"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="getArticles" resultMap="ArticleVOResultMap">
+        select
+        <include refid="ArticleVOList_Common_List"/>
+        from article a
+                 join user u
+                      ON a.user_id = u.id
+                 left join pic i
+                           ON a.article_id = i.article_id
+        where topic = #{topic,jdbcType=VARCHAR}
+        order by submit_time desc
+    </select>
+
+
+    <select id="getArticlesAll" resultMap="ArticleVOResultMap">
+        select
+        <include refid="ArticleVOList_Common_List"/>
+        from article a
+                 join user u
+                      ON a.user_id = u.id
+                 left join pic i
+                           ON a.article_id = i.article_id
+        order by submit_time desc
+    </select>
+
+
+    <select id="getArticleById" resultMap="ArticleVOResultMap">
+        select
+        <include refid="ArticleVOList_Common_List"/>
+        from article a
+                 join user u
+                      ON a.user_id = u.id
+                 left join pic i
+                           ON a.article_id = i.article_id
+        where a.article_id = #{articleId,jdbcType=VARCHAR}
+        order by submit_time desc
+    </select>
+
+    <select id="getArticlesByUserId" resultMap="ArticleVOResultMap">
+        select
+        <include refid="ArticleVOList_Common_List"/>
+        from article a
+                 join user u
+                      ON a.user_id = u.id
+                 left join pic i
+                           ON a.article_id = i.article_id
+        where a.user_id = #{userId,jdbcType=INTEGER}
+        order by submit_time desc
+    </select>
+
+
+<!--    <insert id="postArticle" keyColumn="article_id" keyProperty="articleId"-->
+<!--            parameterType="com.sandyz.bobtimerserver.pojo.Article" useGeneratedKeys="true">-->
+<!--        &lt;!&ndash;@mbg.generated&ndash;&gt;-->
+<!--        insert into article (user_id, submit_time, `text`,-->
+<!--                             topic)-->
+<!--        values (#{userId,jdbcType=INTEGER}, #{submitTime,jdbcType=TIMESTAMP}, #{text,jdbcType=VARCHAR},-->
+<!--                #{topic,jdbcType=VARCHAR})-->
+<!--    </insert>-->
+
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from article
+        where article_id = #{articleId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        <!--@mbg.generated-->
+        delete
+        from article
+        where article_id = #{articleId,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="article_id" keyProperty="articleId"
+            parameterType="com.sandyz.bobtimerserver.pojo.Article" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into article (user_id, submit_time, `text`,
+                             topic)
+        values (#{userId,jdbcType=INTEGER}, #{submitTime,jdbcType=TIMESTAMP}, #{text,jdbcType=VARCHAR},
+                #{topic,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="article_id" keyProperty="articleId"
+            parameterType="com.sandyz.bobtimerserver.pojo.Article" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="submitTime != null">
+                submit_time,
+            </if>
+            <if test="text != null">
+                `text`,
+            </if>
+            <if test="topic != null">
+                topic,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="submitTime != null">
+                #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="text != null">
+                #{text,jdbcType=VARCHAR},
+            </if>
+            <if test="topic != null">
+                #{topic,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.sandyz.bobtimerserver.pojo.Article">
+        <!--@mbg.generated-->
+        update article
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="submitTime != null">
+                submit_time = #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="text != null">
+                `text` = #{text,jdbcType=VARCHAR},
+            </if>
+            <if test="topic != null">
+                topic = #{topic,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where article_id = #{articleId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.sandyz.bobtimerserver.pojo.Article">
+        <!--@mbg.generated-->
+        update article
+        set user_id     = #{userId,jdbcType=INTEGER},
+            submit_time = #{submitTime,jdbcType=TIMESTAMP},
+            `text`      = #{text,jdbcType=VARCHAR},
+            topic       = #{topic,jdbcType=VARCHAR}
+        where article_id = #{articleId,jdbcType=INTEGER}
+    </update>
 </mapper>

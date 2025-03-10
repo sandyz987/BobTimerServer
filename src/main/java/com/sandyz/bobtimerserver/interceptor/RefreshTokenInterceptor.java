@@ -6,6 +6,7 @@ import com.sandyz.bobtimerserver.util.BeanUtil;
 import com.sandyz.bobtimerserver.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.sandyz.bobtimerserver.util.RedisKey.LOGIN_TOKEN;
 
+@Slf4j
 public class RefreshTokenInterceptor implements HandlerInterceptor {
 
     RedisTemplate<String, Object> redisTemplate;
@@ -42,6 +44,7 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
         }
         UserHolder.setUser(user);
         redisTemplate.expire(key, 30 * 60, TimeUnit.SECONDS);
+        log.trace("refreshed token: {}", key);
         return true;
     }
 

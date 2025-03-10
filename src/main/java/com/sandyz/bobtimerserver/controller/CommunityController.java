@@ -1,34 +1,63 @@
 package com.sandyz.bobtimerserver.controller;
 
-import com.sandyz.bobtimerserver.mapper.ArticleMapper;
+import com.github.pagehelper.PageInfo;
+import com.sandyz.bobtimerserver.auth.UserHolder;
+import com.sandyz.bobtimerserver.service.ArticleService;
 import com.sandyz.bobtimerserver.util.ResultMessage;
-import com.sandyz.bobtimerserver.vo.ArticlePostVO;
+import com.sandyz.bobtimerserver.vo.ArticlePostQuery;
+import com.sandyz.bobtimerserver.vo.ArticleVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/community")
+@Slf4j
 public class CommunityController {
-
     @Autowired
-    private ArticleMapper articleMapper;
+    private ArticleService articleService;
+
 
     @PostMapping("/post-article")
-    ResultMessage postArticle(@RequestBody ArticlePostVO articlePostVO) {
-        return ResultMessage.fail(501, "Not implemented yet");
+    ResultMessage postArticle(@RequestParam String content, @RequestParam(defaultValue = "广场") String topic, @RequestBody(required = false) List<String> images) {
+        ArticlePostQuery articlePostQuery = new ArticlePostQuery();
+        articlePostQuery.setText(content);
+        articlePostQuery.setTopic(topic);
+        articlePostQuery.setImages(images);
+        articlePostQuery.setUserId(UserHolder.getUser().getId());
+        return ResultMessage.success(200, articleService.postArticle(articlePostQuery));
+    }
+
+    @DeleteMapping("/delete-article/{articleId}")
+    ResultMessage deleteArticle(@PathVariable int articleId) {
+        if (!articleService.deleteArticle(articleId)) {
+            return ResultMessage.fail(404, "文章不存在");
+        }
+        return ResultMessage.success(200, "删除成功");
     }
 
     @GetMapping("/articles")
-    ResultMessage getArticles(@RequestParam String topic,  @RequestParam(defaultValue = "10") Integer limit, @RequestParam(defaultValue = "0") Integer offset) {
-        return ResultMessage.success(200, articleMapper.getArticles(topic, limit, offset));
+    PageInfo<ArticleVO> getArticles(@RequestParam(required = false) String topic, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+        log.trace("getArticles: topic={} pageNum={} pageSize={}", topic, pageNum, pageSize);
+        return articleService.getArticles(topic, pageNum, pageSize);
     }
 
-    @GetMapping("/articles-pager")
-    ResultMessage getArticlesPager(@RequestParam String topic, @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
-        return ResultMessage.fail(501, "Not implemented yet");
+    @GetMapping("/articles/user/{userId}")
+    PageInfo<ArticleVO> getArticlesByUser(@PathVariable int userId, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+        log.trace("getArticles: userId={} pageNum={} pageSize={}", userId, pageNum, pageSize);
+        return articleService.getArticlesByUser(userId, pageNum, pageSize);
     }
 
+    @GetMapping("/article/{articleId}")
+    ResultMessage getArticleById(@PathVariable int articleId) {
+        ArticleVO articleVO = articleService.getArticleById(articleId);
+        if (articleVO == null) {
+            return ResultMessage.fail(404, "文章不存在");
+        }
+        return ResultMessage.success(200, articleVO);
+    }
 
 
 }
