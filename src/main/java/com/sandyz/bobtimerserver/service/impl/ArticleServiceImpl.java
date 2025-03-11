@@ -71,4 +71,11 @@ public class ArticleServiceImpl implements ArticleService {
         picMapper.deleteByArticleId(articleId);
         return articleMapper.deleteByPrimaryKey(articleId) != 0;
     }
+
+    @Override
+    public Boolean toggleLike(int articleId) {
+        return null;
+    }
+
+
 }

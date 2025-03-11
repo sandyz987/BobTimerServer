@@ -10,4 +10,5 @@ public interface ArticleService {
     ArticleVO postArticle(ArticlePostQuery articlePostQuery);
     ArticleVO getArticleById(int articleId);
     Boolean deleteArticle(int articleId);
+    Boolean toggleLike(int articleId);
 }

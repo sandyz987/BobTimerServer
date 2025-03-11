@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sandyz.bobtimerserver.mapper.ArticleMapper">
-    <resultMap id="BaseResultMap" type="com.sandyz.bobtimerserver.pojo.Article">
+    <resultMap id="BaseResultMap" type="com.sandyz.bobtimerserver.vo.ArticleVO">
         <!--@mbg.generated-->
         <!--@Table article-->
         <id column="article_id" jdbcType="INTEGER" property="articleId"/>
@@ -9,6 +9,9 @@
         <result column="submit_time" jdbcType="TIMESTAMP" property="submitTime"/>
         <result column="text" jdbcType="VARCHAR" property="text"/>
         <result column="topic" jdbcType="VARCHAR" property="topic"/>
+        <result column="praise_count" jdbcType="INTEGER" property="praiseCount"/>
+        <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
+        <result column="is_praised" jdbcType="INTEGER" property="isPraised"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
@@ -22,13 +25,21 @@
     <!--    u.id, u.stu_id, u.school_id, u.nickname, u.register_date, u.sex, u.`text`, u.avatar_url, u.is_admin-->
     <!--  </sql>-->
 
+    <sql id="PraisedUserInfo">
+        pu.id            AS praise_user_id,
+        pu.stu_id        AS praise_stu_id,
+        pu.school_id     AS praise_school_id,
+        pu.nickname      AS praise_nickname,
+        pu.register_date AS praise_register_date,
+        pu.sex           AS praise_sex,
+        pu.text          AS praise_text,
+        pu.avatar_url    AS praise_avatar_url,
+        pu.is_admin      AS praise_is_admin,
+        (SELECT COUNT(*) FROM praise p WHERE p.id = a.article_id AND p.which = 0) AS praise_count
+<!--        count(p.id)      AS praise_count-->
+    </sql>
 
-    <sql id="ArticleVOList_Common_List">
-        a.article_id    as article_id,
-        a.user_id       as user_id,
-        a.submit_time   as submit_time,
-        a.`text`        as `text`,
-        a.topic         as topic,
+    <sql id="UserInfo">
         u.id            as id,
         u.stu_id        as stu_id,
         u.school_id     as school_id,
@@ -37,13 +48,36 @@
         u.sex           as sex,
         u.`text`        as `u_text`,
         u.avatar_url    as avatar_url,
-        u.is_admin      as is_admin,
-        i.pic_url       as pic_url
+        u.is_admin      as is_admin
+    </sql>
+
+
+    <sql id="ArticleVOList_Common_List">
+        a.article_id    as article_id,
+        a.user_id       as user_id,
+        a.submit_time   as submit_time,
+        a.`text`        as `text`,
+        a.topic         as topic,
+        <include refid="UserInfo"/>,
+        i.pic_url       as pic_url,
+        <include refid="PraisedUserInfo"/>
+    </sql>
+
+    <sql id="Require_Praise_List">
+        left join (
+                select p2.id, p2.user_id as pid_limited
+                from praise p2
+                where p2.which = 0
+                order by p2.praise_time desc
+                limit 2
+                ) p_limited on p_limited.id = a.article_id
+        left join user pu
+            on pid_limited = pu.id
     </sql>
 
 
     <resultMap id="ArticleVOResultMap" type="com.sandyz.bobtimerserver.vo.ArticleVO" extends="BaseResultMap">
-        <association property="userInfoVO" javaType="com.sandyz.bobtimerserver.vo.UserInfoVO">
+        <association property="authorUser" javaType="com.sandyz.bobtimerserver.vo.UserInfoVO">
             <result property="userId" column="id"/>
             <result property="stuId" column="stu_id"/>
             <result property="schoolId" column="school_id"/>
@@ -58,6 +92,17 @@
         <collection property="images" ofType="String">
             <result column="pic_url"/>
         </collection>
+        <collection property="praiseUsers" ofType="com.sandyz.bobtimerserver.vo.UserInfoVO">
+            <result property="userId" column="praise_user_id"/>
+            <result property="stuId" column="praise_stu_id"/>
+            <result property="schoolId" column="praise_school_id"/>
+            <result property="nickname" column="praise_nickname"/>
+            <result property="registerDate" column="praise_register_date"/>
+            <result property="sex" column="praise_sex"/>
+            <result property="text" column="praise_text"/>
+            <result property="avatarUrl" column="praise_avatar_url"/>
+            <result property="isAdmin" column="praise_is_admin"/>
+        </collection>
     </resultMap>
 
 
@@ -65,10 +110,12 @@
         select
         <include refid="ArticleVOList_Common_List"/>
         from article a
-                 join user u
-                      ON a.user_id = u.id
-                 left join pic i
-                           ON a.article_id = i.article_id
+            join user u
+                 on a.user_id = u.id
+            left join pic i
+                      on a.article_id = i.article_id
+        <include refid="Require_Praise_List"/>
+
         where topic = #{topic,jdbcType=VARCHAR}
         order by submit_time desc
     </select>
@@ -82,6 +129,7 @@
                       ON a.user_id = u.id
                  left join pic i
                            ON a.article_id = i.article_id
+        <include refid="Require_Praise_List"/>
         order by submit_time desc
     </select>
 
@@ -94,6 +142,7 @@
                       ON a.user_id = u.id
                  left join pic i
                            ON a.article_id = i.article_id
+        <include refid="Require_Praise_List"/>
         where a.article_id = #{articleId,jdbcType=VARCHAR}
         order by submit_time desc
     </select>
@@ -106,6 +155,7 @@
                       ON a.user_id = u.id
                  left join pic i
                            ON a.article_id = i.article_id
+        <include refid="Require_Praise_List"/>
         where a.user_id = #{userId,jdbcType=INTEGER}
         order by submit_time desc
     </select>

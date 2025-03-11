@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sandyz.bobtimerserver.mapper.PraiseMapper">
+    <resultMap id="BaseResultMap" type="com.sandyz.bobtimerserver.pojo.Praise">
+        <!--@mbg.generated-->
+        <!--@Table praise-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <id column="which" jdbcType="INTEGER" property="which"/>
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <id column="praise_time" jdbcType="INTEGER" property="praiseTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, which, user_id, praise_time
+    </sql>
+    <delete id="deletePraise" parameterType="map">
+        <!--@mbg.generated-->
+        delete
+        from praise
+        where id = #{id,jdbcType=INTEGER}
+          and which = #{which,jdbcType=INTEGER}
+          and user_id = #{user_id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="praise" parameterType="com.sandyz.bobtimerserver.pojo.Praise">
+        <!--@mbg.generated-->
+        insert into praise (id, which, user_id, praise_time)
+        values (#{id,jdbcType=INTEGER}, #{which,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{praiseTime,jdbcType=INTEGER})
+    </insert>
+
+    <select id="selectPraise" parameterType="map" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from praise
+        where id = #{id,jdbcType=INTEGER}
+          and which = #{which,jdbcType=INTEGER}
+          and user_id = #{user_id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectPraises" parameterType="map" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from praise
+        where id = #{id,jdbcType=INTEGER}
+        and which = #{which,jdbcType=INTEGER}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.sandyz.bobtimerserver.pojo.Praise">
+        <!--@mbg.generated-->
+        insert into praise
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="which != null">
+                which,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="praiseTime != null">
+                praise_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="which != null">
+                #{which,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="praiseTime != null">
+                #{praiseTime,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+</mapper>

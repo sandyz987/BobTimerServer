@@ -19,9 +19,8 @@ CREATE TABLE IF NOT EXISTS `user`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
--- 设置自增 ID 从 100002 开始
 ALTER TABLE `user`
-    AUTO_INCREMENT = 100002;
+    AUTO_INCREMENT = 100001;
 
 -- 学校表
 CREATE TABLE IF NOT EXISTS `school`
@@ -118,6 +117,8 @@ CREATE TABLE IF NOT EXISTS `follow`
 (
     `user_id`          INT UNSIGNED NOT NULL,    -- 用户 ID
     `followed_user_id` INT UNSIGNED NOT NULL,    -- 被关注的用户 ID
+    `follow_time`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 关注时间
+
     PRIMARY KEY (`user_id`, `followed_user_id`) -- 复合主键：用户与关注的用户组合
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
@@ -128,6 +129,8 @@ CREATE TABLE IF NOT EXISTS `praise`
     `id`      INT UNSIGNED NOT NULL,       -- 被点赞的对象 ID（动态、评论）
     `user_id` INT UNSIGNED NOT NULL,       -- 用户 ID
     `which`   INT UNSIGNED NOT NULL,       -- 点赞对象类型（0：动态，1：一级评论，2：二级评论）
+    `praise_time`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 关注时间
+
     PRIMARY KEY (`id`, `which`, `user_id`) -- 复合主键：对象 ID、类型与用户 ID
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
@@ -318,12 +321,12 @@ VALUES
     (1, 'https://example.com/article/experiment.jpg'),
     (2, 'https://example.com/article/ps5.jpg');
 
-INSERT INTO `follow` (`user_id`, `followed_user_id`)
+INSERT INTO `follow` (`user_id`, `followed_user_id`, `follow_time`)
 VALUES
-    (100002, 100001),
-    (100001, 100002);
+    (100002, 100001, NOW()),
+    (100001, 100002, NOW());
 
-INSERT INTO `praise` (`id`, `user_id`, `which`)
+INSERT INTO `praise` (`id`, `user_id`, `which`, `praise_time`)
 VALUES
-    (1, 100001, 0),  -- Bob 给 Alice 的帖子点赞
-    (2, 100002, 0);  -- Alice 给 Bob 的帖子点赞
+    (1, 100001, 0, NOW()),  -- Bob 给 Alice 的帖子点赞
+    (2, 100002, 0, NOW());  -- Alice 给 Bob 的帖子点赞

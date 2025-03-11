@@ -12,7 +12,7 @@ public class ResultMessage {
     private ResultMessage() {}
 
     public static ResultMessage success() {
-        return new ResultMessage();
+        return new ResultMessage().setCode(200);
     }
 
     public static ResultMessage success(int code, String msg, Object data) {
@@ -27,8 +27,16 @@ public class ResultMessage {
         return new ResultMessage().setCode(code).setData(data);
     }
 
+    public static ResultMessage handle(Boolean isSuccess) {
+        if (isSuccess) {
+            return success();
+        } else {
+            return fail();
+        }
+    }
+
     public static ResultMessage fail() {
-        return new ResultMessage();
+        return new ResultMessage().setCode(400);
     }
 
     public static ResultMessage fail(int code, String msg) {
