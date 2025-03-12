@@ -65,7 +65,7 @@
 
     <sql id="Require_Praise_List">
         left join (
-                select p2.id, p2.user_id as pid_limited
+                select p2.id, p2.user_id as pid_limited, p2.praise_time
                 from praise p2
                 where p2.which = 0
                 order by p2.praise_time desc
@@ -117,7 +117,7 @@
         <include refid="Require_Praise_List"/>
 
         where topic = #{topic,jdbcType=VARCHAR}
-        order by submit_time desc
+        order by submit_time desc, p_limited.praise_time desc
     </select>
 
 
@@ -130,7 +130,7 @@
                  left join pic i
                            ON a.article_id = i.article_id
         <include refid="Require_Praise_List"/>
-        order by submit_time desc
+        order by submit_time desc, p_limited.praise_time desc
     </select>
 
 
@@ -144,7 +144,7 @@
                            ON a.article_id = i.article_id
         <include refid="Require_Praise_List"/>
         where a.article_id = #{articleId,jdbcType=VARCHAR}
-        order by submit_time desc
+        order by submit_time desc, p_limited.praise_time desc
     </select>
 
     <select id="getArticlesByUserId" resultMap="ArticleVOResultMap">
@@ -157,7 +157,7 @@
                            ON a.article_id = i.article_id
         <include refid="Require_Praise_List"/>
         where a.user_id = #{userId,jdbcType=INTEGER}
-        order by submit_time desc
+        order by submit_time desc, p_limited.praise_time desc
     </select>
 
 

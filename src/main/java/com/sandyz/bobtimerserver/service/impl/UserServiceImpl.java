@@ -19,6 +19,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+
+    @Override
+    public User userLoginTest(int userId) {
+        User user = userRepository.findById(userId);
+        if (user == null) {
+            throw new BobException(BobExceptionEnum.USER_NOT_EXISTED_ERROR);
+        }
+        return user;
+    }
+
     @Override
     public User userLogin(UserVO userVo) {
         User user = userRepository.findByUserId(userVo.getUserId());

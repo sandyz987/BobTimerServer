@@ -59,8 +59,8 @@ public class CommunityController {
         return ResultMessage.success(200, articleVO);
     }
 
-    @PostMapping("/praise/{articleId}")
-    ResultMessage praiseArticle(@PathVariable int articleId) {
+    @PostMapping("/toggle-praise/{articleId}")
+    ResultMessage togglePraise(@PathVariable int articleId) {
         return ResultMessage.handle(articleService.toggleLike(articleId));
     }
 

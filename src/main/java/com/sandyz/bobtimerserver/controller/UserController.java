@@ -15,10 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -29,10 +26,13 @@ import static com.sandyz.bobtimerserver.util.RedisKey.LOGIN_TOKEN;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
     UserService userService;
-    @Autowired
     RedisTemplate<String, Object> redisTemplate;
+
+    public UserController(UserService userService, RedisTemplate<String, Object> redisTemplate) {
+        this.userService = userService;
+        this.redisTemplate = redisTemplate;
+    }
 
     @PostMapping("/register")
     ResultMessage register(@RequestBody UserVO userVo) {
@@ -67,6 +67,30 @@ public class UserController {
 
         }
         return ResultMessage.fail(400, "登录失败");
+    }
+
+
+    /**
+     * 无需密码可以登录任意用户，测试使用，部署请删除
+     * @param userId
+     * @return
+     */
+    @PostMapping("/login-test/{userId}")
+    ResultMessage login(@PathVariable int userId, HttpServletRequest request, HttpServletResponse response) {
+        User user = userService.userLoginTest(userId);
+        if (user == null) {
+            return ResultMessage.fail(400, "登录失败");
+        }
+        String token = UUID.randomUUID().toString(true);
+        try {
+            redisTemplate.opsForHash().putAll(LOGIN_TOKEN + token, BeanUtil.bean2map(user));
+            redisTemplate.expire(LOGIN_TOKEN + token, 30 * 60, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultMessage.fail(500, "登录失败");
+        }
+        CookieUtil.setCookie(request, response, "BOB_TOKEN", token, 30 * 60);
+        return ResultMessage.success(200, "登录成功", new TokenVO(token, new Date().getTime() + 30 * 60 * 1000));
     }
 
     @PostMapping("/logout")

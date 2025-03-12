@@ -2,14 +2,18 @@ package com.sandyz.bobtimerserver.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sandyz.bobtimerserver.auth.UserHolder;
 import com.sandyz.bobtimerserver.mapper.ArticleMapper;
 import com.sandyz.bobtimerserver.mapper.PicMapper;
+import com.sandyz.bobtimerserver.mapper.PraiseMapper;
 import com.sandyz.bobtimerserver.pojo.Article;
 import com.sandyz.bobtimerserver.pojo.Pic;
+import com.sandyz.bobtimerserver.pojo.Praise;
 import com.sandyz.bobtimerserver.service.ArticleService;
 import com.sandyz.bobtimerserver.vo.ArticlePostQuery;
 import com.sandyz.bobtimerserver.vo.ArticleVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +22,15 @@ import java.util.ArrayList;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
-    @Autowired
-    private ArticleMapper articleMapper;
-    @Autowired
-    private PicMapper picMapper;
+    private final ArticleMapper articleMapper;
+    private final PicMapper picMapper;
+    private final PraiseMapper praiseMapper;
+
+    public ArticleServiceImpl(ArticleMapper articleMapper, PicMapper picMapper, PraiseMapper praiseMapper) {
+        this.articleMapper = articleMapper;
+        this.picMapper = picMapper;
+        this.praiseMapper = praiseMapper;
+    }
 
     @Override
     public PageInfo<ArticleVO> getArticles(String topic, int pageNum, int pageSize) {
@@ -74,7 +83,19 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Boolean toggleLike(int articleId) {
-        return null;
+        if (articleMapper.selectByPrimaryKey(articleId) == null) {
+            return false;
+        }
+        try {
+            Praise praise = new Praise();
+            praise.setId(articleId);
+            praise.setUserId(UserHolder.getUser().getId());
+            praise.setWhich(0);
+            praiseMapper.insertSelective(praise);
+        } catch (DuplicateKeyException e) {
+            praiseMapper.deletePraise(articleId, 0, UserHolder.getUser().getId()); // 取消点赞
+        }
+        return true;
     }
 
 

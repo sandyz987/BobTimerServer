@@ -26,6 +26,7 @@ public class MvcConfig implements WebMvcConfigurer {
                         "/static/**",
                         "/error",
                         "/user/login",
+                        "/user/login-test/**",
                         "/user/register",
                         "/user/logout"
                 );
