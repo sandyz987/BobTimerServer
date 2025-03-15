@@ -4,9 +4,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sandyz.bobtimerserver.auth.UserHolder;
 import com.sandyz.bobtimerserver.mapper.ArticleMapper;
+import com.sandyz.bobtimerserver.mapper.CommentMapper;
 import com.sandyz.bobtimerserver.mapper.PicMapper;
 import com.sandyz.bobtimerserver.mapper.PraiseMapper;
 import com.sandyz.bobtimerserver.pojo.Article;
+import com.sandyz.bobtimerserver.pojo.Comment;
 import com.sandyz.bobtimerserver.pojo.Pic;
 import com.sandyz.bobtimerserver.pojo.Praise;
 import com.sandyz.bobtimerserver.service.ArticleService;
@@ -35,10 +37,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public PageInfo<ArticleVO> getArticles(String topic, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
+        int userId = UserHolder.getUserId();
         if (topic == null || topic.isBlank()) {
-            return new PageInfo<>(articleMapper.getArticlesAll());
+            return new PageInfo<>(articleMapper.getArticlesAll(userId));
         }
-        return new PageInfo<>(articleMapper.getArticles(topic));
+        return new PageInfo<>(articleMapper.getArticles(topic, userId));
     }
 
     @Override
@@ -71,7 +74,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ArticleVO getArticleById(int articleId) {
-        return articleMapper.getArticleById(articleId);
+        int userId = UserHolder.getUserId();
+        return articleMapper.getArticleById(articleId, userId);
     }
 
     @Transactional
@@ -89,11 +93,11 @@ public class ArticleServiceImpl implements ArticleService {
         try {
             Praise praise = new Praise();
             praise.setId(articleId);
-            praise.setUserId(UserHolder.getUser().getId());
+            praise.setUserId(UserHolder.getUserId());
             praise.setWhich(0);
             praiseMapper.insertSelective(praise);
         } catch (DuplicateKeyException e) {
-            praiseMapper.deletePraise(articleId, 0, UserHolder.getUser().getId()); // 取消点赞
+            praiseMapper.deletePraise(articleId, 0, UserHolder.getUserId()); // 取消点赞
         }
         return true;
     }

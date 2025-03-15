@@ -35,7 +35,9 @@
         pu.text          AS praise_text,
         pu.avatar_url    AS praise_avatar_url,
         pu.is_admin      AS praise_is_admin,
-        (SELECT COUNT(*) FROM praise p WHERE p.id = a.article_id AND p.which = 0) AS praise_count
+        (SELECT COUNT(*) FROM praise p WHERE p.id = a.article_id AND p.which = 0) AS praise_count,
+        (SELECT COUNT(*) FROM comment c WHERE c.reply_id = a.article_id AND c.which = 1) AS comment_count,
+        EXISTS (SELECT * FROM praise p WHERE p.user_id = #{userId,jdbcType=INTEGER} AND p.id = a.article_id AND p.which = 0) AS is_praised
 <!--        count(p.id)      AS praise_count-->
     </sql>
 

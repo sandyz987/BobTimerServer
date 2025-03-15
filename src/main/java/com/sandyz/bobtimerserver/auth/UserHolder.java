@@ -10,6 +10,9 @@ public class UserHolder {
     public static User getUser() {
         return userThreadLocal.get();
     }
+    public static int getUserId() {
+        return userThreadLocal.get() == null ? -1 : userThreadLocal.get().getId();
+    }
     public static void removeUser() {
         userThreadLocal.remove();
     }

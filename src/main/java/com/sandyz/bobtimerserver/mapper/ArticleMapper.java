@@ -21,13 +21,13 @@ public interface ArticleMapper {
 
     int updateByPrimaryKey(Article record);
 
-    List<ArticleVO> getArticles(@Param("topic") String topic);
+    List<ArticleVO> getArticles(@Param("topic") String topic, @Param("userId") Integer userId);
 
-    List<ArticleVO> getArticlesAll();
+    List<ArticleVO> getArticlesAll(@Param("userId") Integer userId);
 
     List<ArticleVO> getArticlesByUserId(@Param("userId") Integer userId);
 
-    ArticleVO getArticleById(@Param("articleId") Integer articleId);
+    ArticleVO getArticleById(@Param("articleId") Integer articleId, @Param("userId") Integer userId);
 
 //    int postArticle(@Param("article") Article article);
 //

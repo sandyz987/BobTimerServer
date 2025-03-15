@@ -1,6 +1,7 @@
 package com.sandyz.bobtimerserver.util;
 import lombok.Data;
-import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @Data
 public class ResultMessage {
@@ -30,6 +31,15 @@ public class ResultMessage {
     public static ResultMessage handle(Boolean isSuccess) {
         if (isSuccess) {
             return success();
+        } else {
+            return fail();
+        }
+    }
+
+    public static ResultMessage idWrapper(int resultId) {
+        if (resultId >= 0) {
+            Map<String, Integer> map = Map.of("id", resultId);
+            return success(200, map);
         } else {
             return fail();
         }

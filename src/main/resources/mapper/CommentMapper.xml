@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sandyz.bobtimerserver.mapper.CommentMapper">
+    <resultMap id="BaseResultMap" type="com.sandyz.bobtimerserver.pojo.Comment">
+        <!--@mbg.generated-->
+        <!--@Table `comment`-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="reply_id" jdbcType="INTEGER" property="replyId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="submit_time" jdbcType="TIMESTAMP" property="submitTime"/>
+        <result column="text" jdbcType="VARCHAR" property="text"/>
+        <result column="which" jdbcType="INTEGER" property="which"/>
+        <result column="reply_user_id" jdbcType="INTEGER" property="replyUserId"/>
+    </resultMap>
+
+    <resultMap id="CommentFull" type="com.sandyz.bobtimerserver.vo.CommentVO" extends="BaseResultMap">
+        <result column="is_praised" jdbcType="INTEGER" property="isPraised"/>
+        <result column="praise_count" jdbcType="INTEGER" property="praiseCount"/>
+        <result column="reply_count" jdbcType="INTEGER" property="replyCount"/>
+        <association property="authorUser" javaType="com.sandyz.bobtimerserver.vo.UserInfoVO">
+            <result property="userId" column="author_user_id"/>
+            <result property="stuId" column="author_stu_id"/>
+            <result property="schoolId" column="author_school_id"/>
+            <result property="nickname" column="author_nickname"/>
+            <result property="registerDate" column="author_register_date"/>
+            <result property="sex" column="author_sex"/>
+            <result property="text" column="author_text"/>
+            <result property="avatarUrl" column="author_avatar_url"/>
+            <result property="isAdmin" column="author_is_admin"/>
+        </association>
+        <collection property="praiseUsers" ofType="com.sandyz.bobtimerserver.vo.UserInfoVO">
+            <result property="userId" column="praise_user_id"/>
+            <result property="stuId" column="praise_stu_id"/>
+            <result property="schoolId" column="praise_school_id"/>
+            <result property="nickname" column="praise_nickname"/>
+            <result property="registerDate" column="praise_register_date"/>
+            <result property="sex" column="praise_sex"/>
+            <result property="text" column="praise_text"/>
+            <result property="avatarUrl" column="praise_avatar_url"/>
+            <result property="isAdmin" column="praise_is_admin"/>
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, reply_id, user_id, submit_time, `text`, which, reply_user_id
+    </sql>
+    <sql id="Comment">
+        <!--@mbg.generated-->
+        c.id, c.reply_id, c.user_id, c.submit_time, c.`text`, c.which, c.reply_user_id
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from `comment`
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        <!--@mbg.generated-->
+        delete
+        from `comment`
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sandyz.bobtimerserver.pojo.Comment"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into `comment` (reply_id, user_id, submit_time,
+                               `text`, which, reply_user_id)
+        values (#{replyId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{submitTime,jdbcType=TIMESTAMP},
+                #{text,jdbcType=VARCHAR}, #{which,jdbcType=INTEGER}, #{replyUserId,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sandyz.bobtimerserver.pojo.Comment"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into `comment`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="replyId != null">
+                reply_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="submitTime != null">
+                submit_time,
+            </if>
+            <if test="text != null">
+                `text`,
+            </if>
+            <if test="which != null">
+                which,
+            </if>
+            <if test="replyUserId != null">
+                reply_user_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="replyId != null">
+                #{replyId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="submitTime != null">
+                #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="text != null">
+                #{text,jdbcType=VARCHAR},
+            </if>
+            <if test="which != null">
+                #{which,jdbcType=INTEGER},
+            </if>
+            <if test="replyUserId != null">
+                #{replyUserId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.sandyz.bobtimerserver.pojo.Comment">
+        <!--@mbg.generated-->
+        update `comment`
+        <set>
+            <if test="replyId != null">
+                reply_id = #{replyId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="submitTime != null">
+                submit_time = #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="text != null">
+                `text` = #{text,jdbcType=VARCHAR},
+            </if>
+            <if test="which != null">
+                which = #{which,jdbcType=INTEGER},
+            </if>
+            <if test="replyUserId != null">
+                reply_user_id = #{replyUserId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.sandyz.bobtimerserver.pojo.Comment">
+        <!--@mbg.generated-->
+        update `comment`
+        set reply_id      = #{replyId,jdbcType=INTEGER},
+            user_id       = #{userId,jdbcType=INTEGER},
+            submit_time   = #{submitTime,jdbcType=TIMESTAMP},
+            `text`        = #{text,jdbcType=VARCHAR},
+            which         = #{which,jdbcType=INTEGER},
+            reply_user_id = #{replyUserId,jdbcType=INTEGER}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="getCommentsByArticleId" resultMap="CommentFull">
+        select
+        <include refid="Comment"/>
+
+        ,
+            exists (select *
+                    from praise p
+                    where p.id = c.id
+                      and p.which = 1
+                      and p.user_id = #{userId,jdbcType=INTEGER})             as is_praised,
+            (select count(*) from praise p where p.id = c.id and p.which = 1) as praise_count,
+            (select count(*)
+             from comment c_recursion
+             where c_recursion.which = 2
+               and c_recursion.reply_id = c.id)                               as reply_count,
+            author.user_id                                                    as author_user_id,
+            author.stu_id                                                     as author_stu_id,
+            author.school_id                                                  as author_school_id,
+            author.nickname                                                   as author_nickname,
+            author.register_date                                              as author_register_date,
+            author.sex                                                        as author_sex,
+            author.text                                                       as author_text,
+            author.avatar_url                                                 as author_avatar_url,
+            author.is_admin                                                   as author_is_admin,
+            praise_user.user_id                                               as praise_user_id,
+            praise_user.stu_id                                                as praise_stu_id,
+            praise_user.school_id                                             as praise_school_id,
+            praise_user.nickname                                              as praise_nickname,
+            praise_user.register_date                                         as praise_register_date,
+            praise_user.sex                                                   as praise_sex,
+            praise_user.text                                                  as praise_text,
+            praise_user.avatar_url                                            as praise_avatar_url,
+            praise_user.is_admin                                              as praise_is_admin
+        from `comment` c
+                 left join user author on c.user_id = author.id
+                 left join praise p_list on c.id = p_list.id and p_list.which = 1
+                 left join user praise_user on p_list.user_id = praise_user.id
+        where c.which = 1
+          and c.reply_id = #{articleId,jdbcType=INTEGER}
+        order by c.submit_time desc
+    </select>
+
+    <select id="getRepliesByCommentId" resultMap="CommentFull">
+        select
+        <include refid="Comment"/>
+        ,
+            exists (select *
+                    from praise p
+                    where p.id = c.id
+                      and p.which = 1
+                      and p.user_id = #{userId,jdbcType=INTEGER})             as is_praised,
+            (select count(*) from praise p where p.id = c.id and p.which = 1) as praise_count,
+            (select count(*)
+             from comment c_recursion
+             where c_recursion.which = 2
+               and c_recursion.reply_id = c.id)                               as reply_count,
+            author.user_id                                                    as author_user_id,
+            author.stu_id                                                     as author_stu_id,
+            author.school_id                                                  as author_school_id,
+            author.nickname                                                   as author_nickname,
+            author.register_date                                              as author_register_date,
+            author.sex                                                        as author_sex,
+            author.text                                                       as author_text,
+            author.avatar_url                                                 as author_avatar_url,
+            author.is_admin                                                   as author_is_admin,
+            praise_user.user_id                                               as praise_user_id,
+            praise_user.stu_id                                                as praise_stu_id,
+            praise_user.school_id                                             as praise_school_id,
+            praise_user.nickname                                              as praise_nickname,
+            praise_user.register_date                                         as praise_register_date,
+            praise_user.sex                                                   as praise_sex,
+            praise_user.text                                                  as praise_text,
+            praise_user.avatar_url                                            as praise_avatar_url,
+            praise_user.is_admin                                              as praise_is_admin
+        from `comment` c
+                 left join user author on c.user_id = author.id
+                 left join praise p_list on c.id = p_list.id and p_list.which = 1
+                 left join user praise_user on p_list.user_id = praise_user.id
+        where c.which = 2
+          and c.reply_id = #{commentId,jdbcType=INTEGER}
+        order by c.submit_time desc
+    </select>
+</mapper>

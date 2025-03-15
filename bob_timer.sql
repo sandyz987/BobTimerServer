@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `praise`
 (
     `id`      INT UNSIGNED NOT NULL,       -- 被点赞的对象 ID（动态、评论）
     `user_id` INT UNSIGNED NOT NULL,       -- 用户 ID
-    `which`   INT UNSIGNED NOT NULL,       -- 点赞对象类型（0：动态，1：一级评论，2：二级评论）
+    `which`   INT UNSIGNED NOT NULL,       -- 点赞对象类型（0：动态，1：评论）
     `praise_time`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 关注时间
 
     PRIMARY KEY (`id`, `which`, `user_id`) -- 复合主键：对象 ID、类型与用户 ID

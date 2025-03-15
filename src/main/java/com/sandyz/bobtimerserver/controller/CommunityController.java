@@ -2,12 +2,13 @@ package com.sandyz.bobtimerserver.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sandyz.bobtimerserver.auth.UserHolder;
+import com.sandyz.bobtimerserver.pojo.Comment;
 import com.sandyz.bobtimerserver.service.ArticleService;
+import com.sandyz.bobtimerserver.service.CommentService;
 import com.sandyz.bobtimerserver.util.ResultMessage;
 import com.sandyz.bobtimerserver.vo.ArticlePostQuery;
 import com.sandyz.bobtimerserver.vo.ArticleVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,9 +17,12 @@ import java.util.List;
 @RequestMapping("/community")
 @Slf4j
 public class CommunityController {
-    @Autowired
-    private ArticleService articleService;
-
+    private final ArticleService articleService;
+    private final CommentService commentService;
+    CommunityController(ArticleService articleService, CommentService commentService) {
+        this.articleService = articleService;
+        this.commentService = commentService;
+    }
 
     @PostMapping("/post-article")
     ResultMessage postArticle(@RequestParam String content, @RequestParam(defaultValue = "广场") String topic, @RequestBody(required = false) List<String> images) {
@@ -62,6 +66,29 @@ public class CommunityController {
     @PostMapping("/toggle-praise/{articleId}")
     ResultMessage togglePraise(@PathVariable int articleId) {
         return ResultMessage.handle(articleService.toggleLike(articleId));
+    }
+
+    @PostMapping("/toggle-praise-comment/{commentId}")
+    ResultMessage togglePraiseComment(@PathVariable int commentId) {
+        return ResultMessage.handle(commentService.toggleLikeComment(commentId));
+    }
+    @PostMapping("/post-comment")
+    ResultMessage postComment(@RequestParam int articleId, @RequestParam String content) {
+        return ResultMessage.idWrapper(commentService.postComment(articleId, content));
+    }
+    @PostMapping("/reply-comment")
+    ResultMessage replyComment(@RequestParam int commentId, @RequestParam String content) {
+        return ResultMessage.idWrapper(commentService.replyComment(commentId, content));
+    }
+
+    @GetMapping("/comments/{articleId}")
+    PageInfo<Comment> getComment(@PathVariable int articleId, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+        return commentService.getComment(articleId, pageNum, pageSize);
+    }
+
+    @GetMapping("/reply/{commentId}")
+    PageInfo<Comment> getReply(@PathVariable int commentId, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+        return commentService.getReply(commentId, pageNum, pageSize);
     }
 
 
