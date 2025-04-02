@@ -4,17 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sandyz.bobtimerserver.auth.UserHolder;
 import com.sandyz.bobtimerserver.mapper.ArticleMapper;
-import com.sandyz.bobtimerserver.mapper.CommentMapper;
 import com.sandyz.bobtimerserver.mapper.PicMapper;
 import com.sandyz.bobtimerserver.mapper.PraiseMapper;
 import com.sandyz.bobtimerserver.pojo.Article;
-import com.sandyz.bobtimerserver.pojo.Comment;
 import com.sandyz.bobtimerserver.pojo.Pic;
 import com.sandyz.bobtimerserver.pojo.Praise;
 import com.sandyz.bobtimerserver.service.ArticleService;
 import com.sandyz.bobtimerserver.vo.ArticlePostQuery;
-import com.sandyz.bobtimerserver.vo.ArticleVO;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sandyz.bobtimerserver.vo.ArticleFullVO;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +32,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public PageInfo<ArticleVO> getArticles(String topic, int pageNum, int pageSize) {
+    public PageInfo<ArticleFullVO> getArticles(String topic, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         int userId = UserHolder.getUserId();
         if (topic == null || topic.isBlank()) {
@@ -45,14 +42,14 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public PageInfo<ArticleVO> getArticlesByUser(int userId, int pageNum, int pageSize) {
+    public PageInfo<ArticleFullVO> getArticlesByUser(int userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         return new PageInfo<>(articleMapper.getArticlesByUserId(userId));
     }
 
     @Transactional
     @Override
-    public ArticleVO postArticle(ArticlePostQuery articlePostQuery) {
+    public ArticleFullVO postArticle(ArticlePostQuery articlePostQuery) {
         Article article = new Article();
         article.setText(articlePostQuery.getText());
         article.setTopic(articlePostQuery.getTopic());
@@ -73,7 +70,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public ArticleVO getArticleById(int articleId) {
+    public ArticleFullVO getArticleById(int articleId) {
         int userId = UserHolder.getUserId();
         return articleMapper.getArticleById(articleId, userId);
     }

@@ -1,9 +1,14 @@
 server:
   port: 3003
+grpc:
+  server:
+    port: 3004
 logging:
   level:
     root: INFO
     com.sandyz.bobtimerserver: TRACE
+    net.devh.boot.grpc: DEBUG
+    net.devh.boot.grpc.server: DEBUG
 spring:
   application:
     name: BobTimerServer

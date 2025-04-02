@@ -7,7 +7,7 @@ import com.sandyz.bobtimerserver.service.ArticleService;
 import com.sandyz.bobtimerserver.service.CommentService;
 import com.sandyz.bobtimerserver.util.ResultMessage;
 import com.sandyz.bobtimerserver.vo.ArticlePostQuery;
-import com.sandyz.bobtimerserver.vo.ArticleVO;
+import com.sandyz.bobtimerserver.vo.ArticleFullVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,25 +42,33 @@ public class CommunityController {
         return ResultMessage.success(200, "删除成功");
     }
 
+    @DeleteMapping("/delete-comment/{commentId}")
+    ResultMessage deleteComment(@PathVariable int commentId) {
+        if (!commentService.deleteComment(commentId)) {
+            return ResultMessage.fail(404, "评论不存在");
+        }
+        return ResultMessage.success(200, "删除成功");
+    }
+
     @GetMapping("/articles")
-    PageInfo<ArticleVO> getArticles(@RequestParam(required = false) String topic, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+    PageInfo<ArticleFullVO> getArticles(@RequestParam(required = false) String topic, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         log.trace("getArticles: topic={} pageNum={} pageSize={}", topic, pageNum, pageSize);
         return articleService.getArticles(topic, pageNum, pageSize);
     }
 
     @GetMapping("/articles/user/{userId}")
-    PageInfo<ArticleVO> getArticlesByUser(@PathVariable int userId, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
+    PageInfo<ArticleFullVO> getArticlesByUser(@PathVariable int userId, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
         log.trace("getArticles: userId={} pageNum={} pageSize={}", userId, pageNum, pageSize);
         return articleService.getArticlesByUser(userId, pageNum, pageSize);
     }
 
     @GetMapping("/article/{articleId}")
     ResultMessage getArticleById(@PathVariable int articleId) {
-        ArticleVO articleVO = articleService.getArticleById(articleId);
-        if (articleVO == null) {
+        ArticleFullVO articleFullVO = articleService.getArticleById(articleId);
+        if (articleFullVO == null) {
             return ResultMessage.fail(404, "文章不存在");
         }
-        return ResultMessage.success(200, articleVO);
+        return ResultMessage.success(200, articleFullVO);
     }
 
     @PostMapping("/toggle-praise/{articleId}")

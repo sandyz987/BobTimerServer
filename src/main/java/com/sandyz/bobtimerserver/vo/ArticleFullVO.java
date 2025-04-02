@@ -1,7 +1,6 @@
 package com.sandyz.bobtimerserver.vo;
 
 import com.sandyz.bobtimerserver.pojo.Article;
-import com.sandyz.bobtimerserver.pojo.Comment;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,10 +8,11 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class CommentVO extends Comment {
+public class ArticleFullVO extends Article {
     private UserInfoVO authorUser;
+    private List<String> images;
     private List<UserInfoVO> praiseUsers;
     private int praiseCount;
     private boolean isPraised;
-    private int replyCount;
+    private int commentCount;
 }

@@ -1,6 +1,7 @@
 package com.sandyz.bobtimerserver.controller;
 
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.RandomUtil;
 import com.sandyz.bobtimerserver.auth.UserHolder;
 import com.sandyz.bobtimerserver.pojo.User;
 import com.sandyz.bobtimerserver.service.UserService;
@@ -24,7 +25,6 @@ import static com.sandyz.bobtimerserver.util.RedisKey.LOGIN_TOKEN;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
     UserService userService;
     RedisTemplate<String, Object> redisTemplate;
 

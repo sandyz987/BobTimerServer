@@ -1,9 +1,7 @@
 package com.sandyz.bobtimerserver.mapper;
 
 import com.sandyz.bobtimerserver.pojo.Article;
-import com.sandyz.bobtimerserver.vo.ArticleVO;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
+import com.sandyz.bobtimerserver.vo.ArticleFullVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -21,13 +19,13 @@ public interface ArticleMapper {
 
     int updateByPrimaryKey(Article record);
 
-    List<ArticleVO> getArticles(@Param("topic") String topic, @Param("userId") Integer userId);
+    List<ArticleFullVO> getArticles(@Param("topic") String topic, @Param("userId") Integer userId);
 
-    List<ArticleVO> getArticlesAll(@Param("userId") Integer userId);
+    List<ArticleFullVO> getArticlesAll(@Param("userId") Integer userId);
 
-    List<ArticleVO> getArticlesByUserId(@Param("userId") Integer userId);
+    List<ArticleFullVO> getArticlesByUserId(@Param("userId") Integer userId);
 
-    ArticleVO getArticleById(@Param("articleId") Integer articleId, @Param("userId") Integer userId);
+    ArticleFullVO getArticleById(@Param("articleId") Integer articleId, @Param("userId") Integer userId);
 
 //    int postArticle(@Param("article") Article article);
 //

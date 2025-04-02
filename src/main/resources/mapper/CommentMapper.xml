@@ -13,7 +13,7 @@
         <result column="reply_user_id" jdbcType="INTEGER" property="replyUserId"/>
     </resultMap>
 
-    <resultMap id="CommentFull" type="com.sandyz.bobtimerserver.vo.CommentVO" extends="BaseResultMap">
+    <resultMap id="CommentFull" type="com.sandyz.bobtimerserver.vo.CommentFullVO" extends="BaseResultMap">
         <result column="is_praised" jdbcType="INTEGER" property="isPraised"/>
         <result column="praise_count" jdbcType="INTEGER" property="praiseCount"/>
         <result column="reply_count" jdbcType="INTEGER" property="replyCount"/>

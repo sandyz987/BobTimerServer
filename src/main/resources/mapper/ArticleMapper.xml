@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sandyz.bobtimerserver.mapper.ArticleMapper">
-    <resultMap id="BaseResultMap" type="com.sandyz.bobtimerserver.vo.ArticleVO">
+    <resultMap id="BaseResultMap" type="com.sandyz.bobtimerserver.vo.ArticleFullVO">
         <!--@mbg.generated-->
         <!--@Table article-->
         <id column="article_id" jdbcType="INTEGER" property="articleId"/>
@@ -78,7 +78,7 @@
     </sql>
 
 
-    <resultMap id="ArticleVOResultMap" type="com.sandyz.bobtimerserver.vo.ArticleVO" extends="BaseResultMap">
+    <resultMap id="ArticleVOResultMap" type="com.sandyz.bobtimerserver.vo.ArticleFullVO" extends="BaseResultMap">
         <association property="authorUser" javaType="com.sandyz.bobtimerserver.vo.UserInfoVO">
             <result property="userId" column="id"/>
             <result property="stuId" column="stu_id"/>

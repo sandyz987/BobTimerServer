@@ -100,4 +100,17 @@ public class CommentServiceImpl implements CommentService {
         int userId = UserHolder.getUserId();
         return new PageInfo<>(commentMapper.getRepliesByCommentId(commentId, userId));
     }
+
+    @Override
+    public boolean deleteComment(int commentId) {
+        Comment comment = commentMapper.selectByPrimaryKey(commentId);
+        if (comment == null) {
+            return false;
+        }
+        if (comment.getUserId() != UserHolder.getUserId()) {
+            return false;
+        }
+        commentMapper.deleteByPrimaryKey(commentId);
+        return true;
+    }
 }
